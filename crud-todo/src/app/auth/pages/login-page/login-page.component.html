@@ -1,0 +1,20 @@
+<section class="login">
+    <div class="container">
+        <div class="login_content">
+            <div class="login-title">
+                <h2>Login</h2>
+            </div>
+            <form class="login_form" [formGroup]="loginForm"> 
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput type="text" formControlName="email">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password">
+                </mat-form-field>
+                <button mat-raised-button color="primary" (click)="login()">Submit</button>
+            </form>
+        </div>
+    </div>
+</section>
