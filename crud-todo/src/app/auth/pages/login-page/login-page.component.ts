@@ -37,7 +37,7 @@ export class LoginPageComponent {
         },
         error: (error) => {
           console.log(error);
-          this.toastr.error('Error', error.name)
+          this.toastr.error('Error', error.error.message)
         }
       })
     }

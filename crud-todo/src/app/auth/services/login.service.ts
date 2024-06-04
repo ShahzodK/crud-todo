@@ -13,7 +13,11 @@ export class LoginService {
     private http: HttpClient
   ) { }
 
-  public login(data: userReq) {
+  public login(data: userReq): Observable<userRes> {
     return this.http.post<userRes>(CommonUrl.MAIN_URL + CommonUrl.AUTH_URL + '/', data)
+  }
+
+  public getToken(): string {
+    return localStorage.getItem('token') || '';
   }
 }
