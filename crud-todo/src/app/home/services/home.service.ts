@@ -17,18 +17,18 @@ export class HomeService {
   }
 
   public getTask(id: string): Observable<Task> {
-    return this.http.get<Task>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL + `/${id}`)
+    return this.http.get<Task>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL + `${id}`)
   }
 
   public createTask(data: Omit<Task, 'id' | 'created_at' | 'updated_at'>): Observable<Task> {
     return this.http.post<Task>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL, data)
   }
 
-  public deleteTask(id: string): Observable<string> {
-    return this.http.delete<string>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL + `/${id}`)
+  public deleteTask(id: string): Observable<null> {
+    return this.http.delete<null>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL + `${id}`)
   }
 
   public updateTask(data: Omit<Task, 'created_at' | 'updated_at'>): Observable<Task> {
-    return this.http.put<Task>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL + `/${data.id}`, data);
+    return this.http.put<Task>(CommonUrl.MAIN_URL + CommonUrl.TODO_URL + `${data.id}/`, data);
   }
 }

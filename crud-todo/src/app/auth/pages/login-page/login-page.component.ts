@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnDestroy {
 
   constructor(
               private loginService: LoginService,
@@ -41,5 +41,10 @@ export class LoginPageComponent {
         }
       })
     }
+  }
+
+  ngOnDestroy(): void {
+      this.unsub$.next(true);
+      this.unsub$.complete();
   }
 }

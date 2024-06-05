@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Delete Task</h2>
+<mat-dialog-content>
+    <p>
+        Are you sure you want to delete {{data?.task?.title}} task
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close [disabled]="deleteTaskLoading">No</button>
+    <button mat-raised-button color="primary" (click)="deleteTask(data.task.id)">
+        <span *ngIf="!deleteTaskLoading">Yes, delete</span>
+        <mat-spinner *ngIf="deleteTaskLoading"
+                     color="accent" [style.width]="'20px'"
+                     [style.height]="'20px'">
+        </mat-spinner>
+    </button>
+
+</mat-dialog-actions>
