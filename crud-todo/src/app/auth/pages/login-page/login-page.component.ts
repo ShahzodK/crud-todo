@@ -4,6 +4,7 @@ import { LoginService } from '../../services/login.service';
 import { Subject, takeUntil } from 'rxjs';
 import { userReq, userRes } from '../../models/user.model';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,7 @@ export class LoginPageComponent {
 
   constructor(
               private loginService: LoginService,
-              private toastr: ToastrService) {}
+              private router: Router) {}
   public unsub$: Subject<boolean> = new Subject<boolean>();
 
   public loginForm = new FormGroup({
@@ -34,10 +35,9 @@ export class LoginPageComponent {
       ).subscribe({
         next: (data: userRes) => {
           localStorage.setItem('token', data.token);
+          this.router.navigate(['/home'])
         },
         error: (error) => {
-          console.log(error);
-          this.toastr.error('Error', error.error.message)
         }
       })
     }

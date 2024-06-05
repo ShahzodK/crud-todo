@@ -30,11 +30,11 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error) => {
         if(error.status === 401) {
           this.router.navigate([AppRoutePathes.AUTH]);
-          this.toastrService.error('Error', error.error.message);
+          this.toastrService.error('Error', error.error.message ? error.error.message : error.message);
           return throwError(() => new Error(error));
         }
         else {
-          this.toastrService.error('Error', error.error.message);
+          this.toastrService.error('Error', error.error.message ? error.error.message : error.message);
           return throwError(() => new Error(error));
         }
       })

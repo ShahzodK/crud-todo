@@ -73,6 +73,10 @@
               "browserTarget": "crud-todo:build:development"
             }
           },
+          "options": {
+            "browserTarget": "crud-todo:development",
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {

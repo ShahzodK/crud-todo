@@ -1,0 +1,24 @@
+<section class="home">
+    <div class="container">
+        <div class="home_content">
+            <div class="home_tasks_wrapper">
+                <div class="home_tasks_create">
+                    <button mat-raised-button color="primary"> New Task</button>
+                </div>
+                <ul class="home_tasks">
+                    <mat-spinner *ngIf="!tasksLoaded"></mat-spinner>
+                    <li *ngFor="let task of tasks?.results" class="home_tasks_block">
+                        <div class="home_tasks_block_content">
+                            <mat-checkbox>{{task.title}}</mat-checkbox>
+                            <span class="home_tasks_block_content_user">By {{task.user}}</span>
+                        </div>
+                        <div class="home_tasks_block_content">
+                            <mat-icon class="home_tasks_block_delete" color="warn">delete</mat-icon>
+                            <p>{{task.created_at | date}}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
