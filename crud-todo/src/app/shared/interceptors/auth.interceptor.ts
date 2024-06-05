@@ -26,6 +26,25 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     });
 
+    if(request.headers.has('skip')) {
+      request = request.clone({
+        headers: request.headers.delete('skip')
+      })
+      return next.handle(request).pipe(
+        catchError((error) => {
+          if(error.status === 401) {
+            this.router.navigate([AppRoutePathes.AUTH]);
+            this.toastrService.error('Error', error.error.message ? error.error.message : error.message);
+            return throwError(() => new Error(error));
+          }
+          else {
+            this.toastrService.error('Error', error.error.message ? error.error.message : error.message);
+            return throwError(() => new Error(error));
+          }
+        })
+      )
+    }
+
     return next.handle(modifiedRequest).pipe(
       catchError((error) => {
         if(error.status === 401) {
