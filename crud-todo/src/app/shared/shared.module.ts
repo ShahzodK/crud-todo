@@ -12,7 +12,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule
+    CommonModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     ReactiveFormsModule,
@@ -21,7 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCheckboxModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
   ]
 })
 export class SharedModule { }

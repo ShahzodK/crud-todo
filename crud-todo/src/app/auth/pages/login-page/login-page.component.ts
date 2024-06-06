@@ -17,9 +17,10 @@ export class LoginPageComponent implements OnDestroy {
               private loginService: LoginService,
               private router: Router) {}
   public unsub$: Subject<boolean> = new Subject<boolean>();
+  public loginUserLoading = false;
 
   public loginForm = new FormGroup({
-    email: new FormControl<string>('', [ Validators.required ]),
+    email: new FormControl<string>('', [ Validators.required, Validators.email ]),
     password: new FormControl<string>('', [ Validators.required ])
   })
 
@@ -29,12 +30,18 @@ export class LoginPageComponent implements OnDestroy {
         email: this.loginForm.get('email')?.value!,
         password: this.loginForm.get('password')?.value!
       };
-
+      this.loginUserLoading = true;
       this.loginService.login(profileValues).pipe(
         takeUntil(this.unsub$),
-      ).subscribe((data: userRes) => {
-        localStorage.setItem('token', data.token);
-        this.router.navigate(['/home']);
+      ).subscribe( {
+        next: (data) => {
+          this.loginUserLoading = false;
+          localStorage.setItem('token', data.token);
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          this.loginUserLoading = false;
+        }
       })
     }
   }

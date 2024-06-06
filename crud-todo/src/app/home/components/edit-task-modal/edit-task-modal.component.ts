@@ -67,6 +67,7 @@ export class EditTaskModalComponent implements OnInit, OnDestroy {
           this.editTaskLoading = false;
         },
         error: () => {
+          this.dialogRef.close(false);
           this.editTaskLoading = false
         }
       })

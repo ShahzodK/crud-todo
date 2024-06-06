@@ -16,11 +16,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions *ngIf="!fetchTaskLoading">
-    <button mat-raised-button mat-dialog-close (click)="editTaskLoading">Cancel</button>
-    <button mat-raised-button color="primary" (click)="editTask()">
-        <span *ngIf="!editTaskLoading">Edit</span>
+    <button mat-raised-button mat-dialog-close (click)="editTaskLoading" [disabled]="editTaskLoading">Cancel</button>
+    <button mat-raised-button color="primary" (click)="!editTaskLoading && editTask()">
         <mat-spinner *ngIf="editTaskLoading"
                      color="accent" [diameter]="20">
         </mat-spinner>
+        <span>Edit</span>
     </button>
 </mat-dialog-actions>

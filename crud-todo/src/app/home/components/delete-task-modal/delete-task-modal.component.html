@@ -6,11 +6,11 @@
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close [disabled]="deleteTaskLoading">No</button>
-    <button mat-raised-button color="primary" (click)="deleteTask(data.task.id)">
-        <span *ngIf="!deleteTaskLoading">Yes, delete</span>
+    <button mat-raised-button color="primary" (click)="!deleteTaskLoading && deleteTask(data.task.id)">
         <mat-spinner *ngIf="deleteTaskLoading"
                      color="accent" [diameter]="20">
         </mat-spinner>
+        <span>Yes, delete</span>
     </button>
 
 </mat-dialog-actions>

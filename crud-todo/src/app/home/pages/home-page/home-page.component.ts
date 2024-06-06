@@ -3,8 +3,7 @@ import { HomeService } from '../../services/home.service';
 import { TaskRes } from '../../models/tasksRes.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateTaskModalComponent } from '../../components/create-task-modal/create-task-modal.component';
-import { Subject, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, Subject, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
 import { DeleteTaskModalComponent } from '../../components/delete-task-modal/delete-task-modal.component';
 import { Task } from '../../models/task.model';
 import { EditTaskModalComponent } from '../../components/edit-task-modal/edit-task-modal.component';
@@ -20,26 +19,24 @@ export class HomePageComponent implements OnInit, OnDestroy {
   constructor(
               public homeService: HomeService,
               public dialog: MatDialog,
-              private cd: ChangeDetectorRef
+              private cd: ChangeDetectorRef,
             ) {}
 
-  public tasks!: TaskRes;
   public tasksLoading = false;
   public unsub$: Subject<boolean> = new Subject<boolean>();
-  public updateCompleteness$ = new Subject<Task>()
+  public updateCompleteness$ = new Subject<Task>();
+  public tasks$ = new BehaviorSubject<TaskRes | null>(null);
 
   ngOnInit(): void {
-      this.homeService.getTasks().subscribe({
-        next: (data) => {
-          this.tasks = data;
-          this.tasksLoading = true;
-          this.cd.markForCheck();
-        },
-        error: () => {
-          this.tasksLoading = true;
-          this.cd.markForCheck();
-        }
-      });
+    this.homeService.getTasks().subscribe({
+      next: (data) => {
+        this.tasksLoading = true;
+        this.tasks$.next(data);
+      },
+      error: () => {
+        this.tasksLoading = true;
+      }
+    });
 
       this.updateCompleteness$.pipe(
         debounceTime(300),
@@ -49,7 +46,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.unsub$)
       ).subscribe(() => {
-        this.cd.markForCheck();
+          this.cd.markForCheck();
       })
   }
 
@@ -58,16 +55,20 @@ export class HomePageComponent implements OnInit, OnDestroy {
       takeUntil(this.unsub$),
       filter(result => result === true),
       switchMap(() => {
-        this.tasks.results = [];
-        this.tasks.count = 0;
         this.tasksLoading = false;
         this.cd.markForCheck();
         return this.homeService.getTasks();
       })
-    ).subscribe((data) => {
-      this.tasks = data;
-      this.tasksLoading = true;
-      this.cd.markForCheck();
+    ).subscribe({
+      next: (data) => {
+        this.tasks$.next(data);
+        this.tasksLoading = true;
+        this.cd.markForCheck();
+      },
+      error: () => {
+        this.tasksLoading = true;
+        this.cd.markForCheck();
+      }
     });
   }
 

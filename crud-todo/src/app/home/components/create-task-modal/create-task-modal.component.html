@@ -16,10 +16,10 @@
 
 <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close [disabled]="createTaskLoading">Cancel</button>
-    <button mat-raised-button color="primary" (click)="createTask()">
-        <span *ngIf="!createTaskLoading">Create</span>
+    <button mat-raised-button color="primary" (click)="!createTaskLoading && createTask()">
         <mat-spinner *ngIf="createTaskLoading"
                      color="accent" [diameter]="20">
         </mat-spinner>
+        <span>Create</span>
     </button>
 </mat-dialog-actions>
