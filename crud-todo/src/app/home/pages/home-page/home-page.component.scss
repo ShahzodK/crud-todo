@@ -23,6 +23,9 @@
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 10px;
+            &_completed {
+                background: #C1E1C1;
+            }
             p {
                 margin: 0;
             }
@@ -33,7 +36,8 @@
                 align-items: flex-end;
                 gap: 10px;
                 &_user {
-                    align-self: center;
+                    align-self: flex-start;
+                    margin-left: 20px;
                 }
             }
             &_icon {

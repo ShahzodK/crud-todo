@@ -7,29 +7,35 @@
                 </div>
                 <ul class="home_tasks">
                     <mat-spinner *ngIf="!tasksLoading"></mat-spinner>
-                    <li *ngFor="let task of tasks?.results" class="home_tasks_block">
-                        <div class="home_tasks_block_content">
-                            <mat-checkbox [checked]="task.completed" (click)="updateTaskCompleteness(task)">{{task.title}}</mat-checkbox>
-                            <span class="home_tasks_block_content_user">By {{task.user}}</span>
-                        </div>
-                        <div class="home_tasks_block_content">
-                            <div class="home_tasks_block_content_actions">
-                                <mat-icon color="accent"
-                                          class="home_tasks_block_icon"
-                                          (click)="openEditTaskDialog(task)">
-                                          edit
-                                </mat-icon>
-                                <mat-icon
-                                          class="home_tasks_block_icon"
-                                          color="warn"
-                                          (click)="openDeleteTaskDialog(task)">
-                                          delete
-                                </mat-icon>
+                    <ng-container *ngFor="let task of tasks?.results">
+                        <li class="home_tasks_block" *ngIf="tasksLoading">
+                            <div class="home_tasks_block_content">
+                                <mat-checkbox  (click)="updateTaskCompleteness(task)"  #checkbox>{{task.title}}</mat-checkbox>
+                                <span class="home_tasks_block_content_user">By {{task.user}}</span>
                             </div>
-                            <p>{{task.created_at | date: 'short'}}</p>
-                        </div>
-                    </li>
+                            <div class="home_tasks_block_content">
+                                <div class="home_tasks_block_content_actions">
+                                    <mat-icon color="accent"
+                                              class="home_tasks_block_icon"
+                                              (click)="openEditTaskDialog(task)">
+                                              edit
+                                    </mat-icon>
+                                    <mat-icon
+                                              class="home_tasks_block_icon"
+                                              color="warn"
+                                              (click)="openDeleteTaskDialog(task)">
+                                              delete
+                                    </mat-icon>
+                                </div>
+                                <p>{{task.created_at | date: 'short'}}</p>
+                            </div>
+                        </li>
+                    </ng-container>
+
                 </ul>
+                <div class="home_tasks_not_found" *ngIf="this.tasks?.count == 0 && tasksLoading">
+                    <h3>No task found</h3>
+                </div>
             </div>
         </div>
     </div>

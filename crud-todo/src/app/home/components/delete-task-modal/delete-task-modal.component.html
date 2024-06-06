@@ -9,8 +9,7 @@
     <button mat-raised-button color="primary" (click)="deleteTask(data.task.id)">
         <span *ngIf="!deleteTaskLoading">Yes, delete</span>
         <mat-spinner *ngIf="deleteTaskLoading"
-                     color="accent" [style.width]="'20px'"
-                     [style.height]="'20px'">
+                     color="accent" [diameter]="20">
         </mat-spinner>
     </button>
 

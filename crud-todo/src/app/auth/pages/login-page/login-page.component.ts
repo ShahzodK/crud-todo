@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { Subject, takeUntil } from 'rxjs';
 import { userReq, userRes } from '../../models/user.model';
-import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,16 +28,13 @@ export class LoginPageComponent implements OnDestroy {
       const profileValues: userReq = {
         email: this.loginForm.get('email')?.value!,
         password: this.loginForm.get('password')?.value!
-      }
+      };
+
       this.loginService.login(profileValues).pipe(
-        takeUntil(this.unsub$)
-      ).subscribe({
-        next: (data: userRes) => {
-          localStorage.setItem('token', data.token);
-          this.router.navigate(['/home'])
-        },
-        error: (error) => {
-        }
+        takeUntil(this.unsub$),
+      ).subscribe((data: userRes) => {
+        localStorage.setItem('token', data.token);
+        this.router.navigate(['/home']);
       })
     }
   }

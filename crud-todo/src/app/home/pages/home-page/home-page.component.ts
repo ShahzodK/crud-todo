@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { HomeService } from '../../services/home.service';
 import { TaskRes } from '../../models/tasksRes.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateTaskModalComponent } from '../../components/create-task-modal/create-task-modal.component';
-import { Subject, debounce, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
+import { Subject, debounceTime, filter, switchMap, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { DeleteTaskModalComponent } from '../../components/delete-task-modal/delete-task-modal.component';
 import { Task } from '../../models/task.model';
@@ -12,16 +12,15 @@ import { EditTaskModalComponent } from '../../components/edit-task-modal/edit-ta
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+  styleUrls: ['./home-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomePageComponent implements OnInit, OnDestroy {
-
-  public title = 'Home';
 
   constructor(
               public homeService: HomeService,
               public dialog: MatDialog,
-              private toastrService: ToastrService
+              private cd: ChangeDetectorRef
             ) {}
 
   public tasks!: TaskRes;
@@ -30,9 +29,16 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public updateCompleteness$ = new Subject<Task>()
 
   ngOnInit(): void {
-      this.homeService.getTasks().subscribe((data) => {
-        this.tasks = data;
-        this.tasksLoading = true;
+      this.homeService.getTasks().subscribe({
+        next: (data) => {
+          this.tasks = data;
+          this.tasksLoading = true;
+          this.cd.markForCheck();
+        },
+        error: () => {
+          this.tasksLoading = true;
+          this.cd.markForCheck();
+        }
       });
 
       this.updateCompleteness$.pipe(
@@ -42,22 +48,27 @@ export class HomePageComponent implements OnInit, OnDestroy {
           return this.homeService.updateTask(task)
         }),
         takeUntil(this.unsub$)
-      ).subscribe()
+      ).subscribe(() => {
+        this.cd.markForCheck();
+      })
   }
 
-  public updateTasks<T>(dialog: MatDialogRef<T>) {
+  public updateTasks<T>(dialog: MatDialogRef<T>): void {
     dialog.afterClosed().pipe(
       takeUntil(this.unsub$),
       filter(result => result === true),
       switchMap(() => {
         this.tasks.results = [];
+        this.tasks.count = 0;
         this.tasksLoading = false;
+        this.cd.markForCheck();
         return this.homeService.getTasks();
       })
     ).subscribe((data) => {
       this.tasks = data;
       this.tasksLoading = true;
-    })
+      this.cd.markForCheck();
+    });
   }
 
   public openCreateTaskDialog(): void {
@@ -68,7 +79,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   public openDeleteTaskDialog(task: Task): void {
-    const dialog = this.dialog.open(DeleteTaskModalComponent, {
+    const dialog: MatDialogRef<DeleteTaskModalComponent> = this.dialog.open(DeleteTaskModalComponent, {
       width: '350px',
       data: {
         task 
@@ -77,8 +88,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.updateTasks(dialog);
   }
 
-  public openEditTaskDialog(task: Task) {
-    const dialog = this.dialog.open(EditTaskModalComponent, {
+  public openEditTaskDialog(task: Task): void {
+    const dialog: MatDialogRef<EditTaskModalComponent> = this.dialog.open(EditTaskModalComponent, {
       width: '350px',
       data: {
         task 
@@ -87,7 +98,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.updateTasks(dialog);
   }
 
-  public updateTaskCompleteness(task: Task) {
+  public updateTaskCompleteness(task: Task): void {
     this.updateCompleteness$.next(task);
   }
 

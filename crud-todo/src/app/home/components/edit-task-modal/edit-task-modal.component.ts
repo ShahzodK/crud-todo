@@ -33,19 +33,25 @@ export class EditTaskModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
       this.homeService.getTask(this.data.task.id).pipe(
         takeUntil(this.unsub$)
-      ).subscribe((data) => {
-        this.fetchTaskLoading = false
-        this.taskForm.patchValue({
-          title: data.title,
-          completed: data.completed,
-          user: data.user
-        })
-      })
+      ).subscribe( {
+        next: (data) => {
+          this.fetchTaskLoading = false
+          this.taskForm.patchValue({
+            title: data.title,
+            completed: data.completed,
+            user: data.user
+          })
+        },
+        error: () => {
+          this.fetchTaskLoading = false;
+          this.dialogRef.close();
+        }
+      });
   }
 
   public editTask(): void {
     if(this.taskForm.valid){
-      const formValues = {
+      const formValues: Omit<Task, 'created_at' | 'updated_at'> = {
         id: this.data.task.id,
         title: this.taskForm.get('title')?.value!,
         completed: this.taskForm.get('completed')?.value!,
@@ -64,7 +70,7 @@ export class EditTaskModalComponent implements OnInit, OnDestroy {
           this.editTaskLoading = false
         }
       })
-    }
+    };
   }
 
   ngOnDestroy(): void {

@@ -19,8 +19,7 @@
     <button mat-raised-button color="primary" (click)="createTask()">
         <span *ngIf="!createTaskLoading">Create</span>
         <mat-spinner *ngIf="createTaskLoading"
-                     color="accent" [style.width]="'20px'"
-                     [style.height]="'20px'">
+                     color="accent" [diameter]="20">
         </mat-spinner>
     </button>
 </mat-dialog-actions>

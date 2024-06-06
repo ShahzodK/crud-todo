@@ -26,11 +26,17 @@ export class DeleteTaskModalComponent implements OnDestroy {
       this.deleteTaskLoading = true;
       this.homeService.deleteTask(id).pipe(
         takeUntil(this.unsub$)
-      ).subscribe((data) => {
-        this.deleteTaskLoading = false;
-        this.toastrService.success('Success', 'Task deleted!');
-        this.dialogRef.close(true);
-      })
+      ).subscribe({
+        next: () => {
+          this.deleteTaskLoading = false;
+          this.toastrService.success('Success', 'Task deleted!');
+          this.dialogRef.close(true);
+        },
+        error: () => {
+          this.deleteTaskLoading = false;
+          this.dialogRef.close(false);
+        }
+      });
   }
 
   ngOnDestroy(): void {

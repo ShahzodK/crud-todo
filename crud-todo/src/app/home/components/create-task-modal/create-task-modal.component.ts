@@ -4,6 +4,7 @@ import { HomeService } from '../../services/home.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-create-task-modal',
@@ -29,7 +30,7 @@ export class CreateTaskModalComponent implements OnDestroy {
 
   public createTask(): void {
     if(this.taskForm.valid){
-      const formValues = {
+      const formValues: Omit<Task, 'id' | 'created_at' | 'updated_at'> = {
         title: this.taskForm.get('title')?.value!,
         completed: this.taskForm.get('completed')?.value!,
         user: this.taskForm.get('user')?.value!,
@@ -44,7 +45,8 @@ export class CreateTaskModalComponent implements OnDestroy {
           this.createTaskLoading = false;
         },
         error: () => {
-          this.createTaskLoading = false
+          this.createTaskLoading = false;
+          this.dialogRef.close(false)
         }
       })
     }
