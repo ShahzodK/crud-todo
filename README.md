@@ -2,6 +2,6 @@
 
 Todo app in Angular 16 \
 To run the project: \
-cd crud-todo \
-npm i \
-ng serve
+1) cd crud-todo \
+2) npm i \
+3) ng serve
