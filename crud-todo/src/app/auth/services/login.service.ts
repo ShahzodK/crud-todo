@@ -14,7 +14,7 @@ export class LoginService {
   ) { }
 
   public login(data: userReq): Observable<userRes> {
-    return this.http.post<userRes>(CommonUrl.MAIN_URL + CommonUrl.AUTH_URL + '/', data)
+    return this.http.post<userRes>(CommonUrl.MAIN_URL + CommonUrl.AUTH_URL, data, {headers: {skip: 'true'}});
   }
 
   public getToken(): string {

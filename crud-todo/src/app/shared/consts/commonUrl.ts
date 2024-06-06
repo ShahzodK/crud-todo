@@ -1,4 +1,5 @@
 export const CommonUrl = {
-    MAIN_URL: 'https://joldibaev.uz/api/',
-    AUTH_URL: 'auth/token/login'
+    MAIN_URL: 'api/',
+    AUTH_URL: 'auth/token/login/',
+    TODO_URL: 'todo/'
 }

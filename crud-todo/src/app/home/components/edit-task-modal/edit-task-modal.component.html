@@ -1,0 +1,26 @@
+
+<h2 mat-dialog-title>Edit Task</h2>
+<mat-dialog-content>
+    <mat-spinner *ngIf="fetchTaskLoading" class="spinner"></mat-spinner>
+    <form [formGroup]="taskForm" *ngIf="!fetchTaskLoading">
+        <mat-form-field>
+          <input matInput type="text" id="title" formControlName="title">
+          <mat-label>Title:</mat-label>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" id="user" formControlName="user">
+          <mat-label>User ID:</mat-label>
+        </mat-form-field>
+        <mat-checkbox [checked]="taskForm.get('completed')?.value!" formControlName="completed">Completed:</mat-checkbox>
+      </form>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="!fetchTaskLoading">
+    <button mat-raised-button mat-dialog-close (click)="editTaskLoading" [disabled]="editTaskLoading">Cancel</button>
+    <button mat-raised-button color="primary" (click)="!editTaskLoading && editTask()">
+        <mat-spinner *ngIf="editTaskLoading"
+                     color="accent" [diameter]="20">
+        </mat-spinner>
+        <span>Edit</span>
+    </button>
+</mat-dialog-actions>

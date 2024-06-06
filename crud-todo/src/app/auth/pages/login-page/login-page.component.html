@@ -13,7 +13,10 @@
                     <mat-label>Password</mat-label>
                     <input matInput type="password" formControlName="password">
                 </mat-form-field>
-                <button mat-raised-button color="primary" (click)="login()">Submit</button>
+                <button mat-raised-button color="primary" (click)="login()">
+                    <mat-spinner [diameter]="20" color="accent" *ngIf="loginUserLoading"></mat-spinner>
+                    Submit
+                </button>
             </form>
         </div>
     </div>

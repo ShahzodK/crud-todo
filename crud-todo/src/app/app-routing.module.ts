@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppRoutePathes } from './shared/enums/ERoutes';
+import { authGuard } from './auth/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -8,6 +9,17 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module')
       .then((mod) => mod.AuthModule),
   },
+  {
+    path: AppRoutePathes.HOME,
+    loadChildren: () => import('./home/home.module')
+      .then((mod) => mod.HomeModule),
+    canMatch: [authGuard]
+  },
+  {
+    path: '**',
+    redirectTo: '/home',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({

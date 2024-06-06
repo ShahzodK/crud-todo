@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { Subject, takeUntil } from 'rxjs';
 import { userReq, userRes } from '../../models/user.model';
-import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -11,15 +11,16 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnDestroy {
 
   constructor(
               private loginService: LoginService,
-              private toastr: ToastrService) {}
+              private router: Router) {}
   public unsub$: Subject<boolean> = new Subject<boolean>();
+  public loginUserLoading = false;
 
   public loginForm = new FormGroup({
-    email: new FormControl<string>('', [ Validators.required ]),
+    email: new FormControl<string>('', [ Validators.required, Validators.email ]),
     password: new FormControl<string>('', [ Validators.required ])
   })
 
@@ -28,18 +29,25 @@ export class LoginPageComponent {
       const profileValues: userReq = {
         email: this.loginForm.get('email')?.value!,
         password: this.loginForm.get('password')?.value!
-      }
+      };
+      this.loginUserLoading = true;
       this.loginService.login(profileValues).pipe(
-        takeUntil(this.unsub$)
-      ).subscribe({
-        next: (data: userRes) => {
+        takeUntil(this.unsub$),
+      ).subscribe( {
+        next: (data) => {
+          this.loginUserLoading = false;
           localStorage.setItem('token', data.token);
+          this.router.navigate(['/home']);
         },
-        error: (error) => {
-          console.log(error);
-          this.toastr.error('Error', error.error.message)
+        error: () => {
+          this.loginUserLoading = false;
         }
       })
     }
+  }
+
+  ngOnDestroy(): void {
+      this.unsub$.next(true);
+      this.unsub$.complete();
   }
 }

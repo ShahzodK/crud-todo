@@ -1,0 +1,42 @@
+<section class="home">
+    <div class="container">
+        <div class="home_content">
+            <div class="home_tasks_wrapper">
+                <div class="home_tasks_create">
+                    <button mat-raised-button color="primary" (click)="openCreateTaskDialog()">New Task</button>
+                </div>
+                <ul class="home_tasks">
+                    <mat-spinner *ngIf="!tasksLoading" color="accent"></mat-spinner>
+                    <ng-container *ngIf="tasks$ | async as tasks">
+                        <ng-container *ngIf="tasks.count > 0; else noTasksFound">
+                            <ng-container *ngFor="let task of tasks.results">
+                                <li class="home_tasks_block" *ngIf="tasksLoading">
+                                    <div class="home_tasks_block_content">
+                                        <mat-checkbox [checked]="task.completed" (click)="updateTaskCompleteness(task)" #checkbox>{{task.title}}</mat-checkbox>
+                                        <span class="home_tasks_block_content_user">By {{task.user}}</span>
+                                    </div>
+                                    <div class="home_tasks_block_content">
+                                        <div class="home_tasks_block_content_actions">
+                                            <mat-icon color="accent" class="home_tasks_block_icon" (click)="openEditTaskDialog(task)">
+                                                edit
+                                            </mat-icon>
+                                            <mat-icon class="home_tasks_block_icon" color="warn" (click)="openDeleteTaskDialog(task)">
+                                                delete
+                                            </mat-icon>
+                                        </div>
+                                        <p>{{task.created_at | date: 'short'}}</p>
+                                    </div>
+                                </li>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template #noTasksFound>
+                            <div class="home_tasks_not_found">
+                                <h3>No task found</h3>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
