@@ -1,0 +1,25 @@
+
+<h2 mat-dialog-title>Create Task</h2>
+<mat-dialog-content>
+    <form [formGroup]="taskForm">
+        <mat-form-field>
+          <input matInput type="text" id="title" formControlName="title">
+          <mat-label>Title:</mat-label>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" id="user" formControlName="user">
+          <mat-label>User ID:</mat-label>
+        </mat-form-field>
+        <mat-checkbox formControlName="completed">Completed:</mat-checkbox>
+      </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close [disabled]="createTaskLoading">Cancel</button>
+    <button mat-raised-button color="primary" (click)="!createTaskLoading && createTask()">
+        <mat-spinner *ngIf="createTaskLoading"
+                     color="accent" [diameter]="20">
+        </mat-spinner>
+        <span>Create</span>
+    </button>
+</mat-dialog-actions>
